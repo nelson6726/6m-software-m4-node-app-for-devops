@@ -49,11 +49,11 @@ jobs: #instructions for each step
       - heroku/install #installs heroku cli for our run command
       - checkout
       - run:
-        name: Heroku Container Push #the name of the group of commands we are running
-        command: |
-          heroku container:login
-          heroku container:push web -a nelson-su-devops
-          heroku container:release web -a nelson-su-devops
+          name: Heroku Container Push #the name of the group of commands we are running
+          command: |
+            heroku container:login
+            heroku container:push web -a nelson-su-devops
+            heroku container:release web -a nelson-su-devops
         #the push commands pusheds the image to heroku's container registry
         #The release command deploys the image from heroku's container registry
 
