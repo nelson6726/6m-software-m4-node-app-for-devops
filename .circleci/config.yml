@@ -1,10 +1,10 @@
 version: 2.1
-orbs:
+orbs: #packages
   node: circleci/node@5.0.1
-  docker: circleci/docker@2.1.4
-jobs:
-  build:
-    docker:
+  docker: circleci/docker@2.1.4 #allows us to use docker orb's commands
+jobs: #instructions for each step
+  build: #build the application, ie install dependencies
+    docker: #container to handle to steps
       - image: cimg/node:16.10
     steps:
       - checkout #copies the working directory of the project
@@ -13,7 +13,6 @@ jobs:
       - run: |
           echo "Installing dependencies..."
           npm install
-
   test:
     docker:
       - image: cimg/node:16.10
@@ -21,7 +20,7 @@ jobs:
       - checkout
       - node/install-packages:
         pkg-manager: npm
-      - run:
+      - run: |
         echo "Running test..."
         npm run test
 
