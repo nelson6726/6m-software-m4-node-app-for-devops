@@ -48,7 +48,7 @@ jobs: #instructions for each step
       - setup_remote_docker
       - heroku/install #installs heroku cli for our run command
       - checkout
-      - run
+      - run:
         name: Heroku Container Push #the name of the group of commands we are running
         command: |
           heroku container:login
