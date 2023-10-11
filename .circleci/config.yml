@@ -13,7 +13,7 @@ jobs: #instructions for each step
       - run: |
           echo "Installing dependencies..."
           npm install
-  test:
+test:
     docker:
       - image: cimg/node:16.10
     steps:
@@ -23,8 +23,7 @@ jobs: #instructions for each step
       - run: |
         echo "Running test..."
         npm run test
-
-        build-and-push:
+build-and-push:
         executor: docker/docker #State the environment that we're use
         steps:
           - setup_remote_docker #This allows use to run docker commands just in case
@@ -37,7 +36,8 @@ jobs: #instructions for each step
             image: cheefong0903/education-space
             tag: 1.0.1
 
-workflows:
+workflows: #defines how each job would run and relate to each other and
+            #
   simple_workflow:
     jobs:
       - build
