@@ -3,6 +3,7 @@ version: 2.1
 orbs: #packages
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4 #allows us to use docker orb's commands
+  heroku: circleci/heroku@2.0.0 #allows us to use heroku orb's commands
 
 jobs: #instructions for each step
   build: #build the application, ie install dependencies
@@ -40,14 +41,34 @@ jobs: #instructions for each step
           image: cheefong0903/education-space
           tag: 1.0.1
 
+  deploy:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - setup_remote_docker
+      - heroku/install #installs heroku cli for our run command
+      - checkout
+      - run
+        name: Heroku Container Push #the name of the group of commands we are running
+        command: |
+          heroku container:login
+          heroku container:push web -a nelson-su-devops
+          heroku container:release web -a nelson-su-devops
+        #the push commands pusheds the image to heroku's container registry
+        #The release command deploys the image from heroku's container registry
+
 workflows: #defines how each job would run and relate to each other and
   # any other dependent states (ex. only run if pushed to main branch)
   simple_workflow:
     jobs:
-      - build
-      - test:
+      - build #1st job
+      - test: #2nd job
           requires:
             - build
-      - build-and-push:
+      - build-and-push: #3rd job
           requires:
             - test
+      - deploy: #4th job
+          requires:
+            - build-and-push
+# mini-exercise - add the deploy job so that it depends on build-and-push job
