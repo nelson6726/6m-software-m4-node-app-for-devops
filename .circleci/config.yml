@@ -36,10 +36,10 @@ jobs: #instructions for each step
       - docker/check
       - docker/build:
           image: cheefong0903/education-space
-          tag: 1.0.1
+          tag: << pipeline.git.tag >>
       - docker/push:
           image: cheefong0903/education-space
-          tag: 1.0.1
+          tag: << pipeline.git.tag >>
 
   deploy:
     docker:
@@ -59,16 +59,29 @@ jobs: #instructions for each step
 
 workflows: #defines how each job would run and relate to each other and
   # any other dependent states (ex. only run if pushed to main branch)
+  version: 2
   simple_workflow:
     jobs:
-      - build #1st job
-      - test: #2nd job
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - test:
           requires:
             - build
-      - build-and-push: #3rd job
+          filters:
+            branches:
+              only:
+                - main
+      - build-and-push:
           requires:
             - test
-      - deploy: #4th job
+          filters:
+            tags:
+              only:
+                - /^v\d+\.\d+\.\d+$/ # Use a regular expression to match Semantic Versioning tags
+      - deploy:
           requires:
             - build-and-push
 # mini-exercise - add the deploy job so that it depends on build-and-push job
